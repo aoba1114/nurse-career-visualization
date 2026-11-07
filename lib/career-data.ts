@@ -47,12 +47,24 @@ export interface TimelineStep {
   current?: boolean
 }
 
+export type AvatarHairStyle = 'short' | 'bob' | 'long' | 'tied' | 'shaved'
+
+export interface AvatarOptions {
+  hairStyle?: AvatarHairStyle
+  hairColor?: string
+  skinColor?: string
+  clothingColor?: string
+  backgroundColor?: string
+  glasses?: boolean
+}
+
 export interface CareerCase {
   id: string
   name: string
   age: number
   gender?: string
   photo?: string
+  avatar?: AvatarOptions
   category: CategoryId
   /** ツリー上の所属（検索・パンくず用） */
   path: string[]
@@ -238,6 +250,7 @@ export const categories: Category[] = [
  *   age: ここに入力,
  *   gender: 'ここに入力',
  *   photo: 'ここに入力',
+ *   avatar: { hairStyle: 'short', hairColor: '#34313A', skinColor: '#F2C9B8', clothingColor: '#8FB8DD', backgroundColor: '#E9E5F4', glasses: false },
  *   category: 'ここに入力',
  *   path: ['ここに入力'],
  *   yearsAsNurse: ここに入力,
@@ -270,6 +283,12 @@ export const cases: CareerCase[] = [
     name: 'Y.T',
     age: 29,
     gender: '男',
+    avatar: {
+      hairStyle: 'short',
+      hairColor: '#34313A',
+      glasses: false,
+      clothingColor: '#8FB8DD',
+    },
     category: 'startup',
     path: ['起業・フリーランス', 'フリーランス', 'IT'],
     yearsAsNurse: 6,

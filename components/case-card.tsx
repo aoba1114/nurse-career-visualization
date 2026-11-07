@@ -2,6 +2,7 @@ import { ArrowRight, Building2, MapPin } from 'lucide-react'
 import Link from 'next/link'
 import type { CareerCase } from '@/lib/career-data'
 import { getCategory } from '@/lib/career-data'
+import { CaseAvatar } from '@/components/case-avatar'
 import { CategoryIcon } from '@/components/category-icon'
 
 export function CaseCard({ data }: { data: CareerCase }) {
@@ -13,12 +14,20 @@ export function CaseCard({ data }: { data: CareerCase }) {
       className="group flex flex-col overflow-hidden rounded-2xl border border-border bg-card shadow-sm transition-all duration-200 hover:-translate-y-1 hover:shadow-md"
     >
       <div className="flex items-start gap-4 p-5">
-        <img
-          src={data.photo || '/placeholder-user.jpg'}
-          alt={`${data.name}さんの顔写真`}
-          className="size-16 shrink-0 rounded-full border border-border object-cover"
-          crossOrigin="anonymous"
-        />
+        {data.photo ? (
+          <img
+            src={data.photo}
+            alt={`${data.name}さんの顔写真`}
+            className="size-16 shrink-0 rounded-full border border-border object-cover"
+            crossOrigin="anonymous"
+          />
+        ) : (
+          <CaseAvatar
+            avatar={data.avatar}
+            label={`${data.name}さんのイラスト`}
+            className="size-16 shrink-0 rounded-full border border-border object-cover"
+          />
+        )}
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-2">
             <h3 className="truncate font-semibold text-foreground">{data.name}</h3>

@@ -12,6 +12,7 @@ import type { CareerCase } from '@/lib/career-data'
 import { getCategory } from '@/lib/career-data'
 import { RatingMeter } from './rating-meter'
 import { CategoryIcon } from '@/components/category-icon'
+import { CaseAvatar } from '@/components/case-avatar'
 
 function Tag({ children }: { children: React.ReactNode }) {
   return (
@@ -45,12 +46,20 @@ export function CaseDetail({ data }: { data: CareerCase }) {
       aria-label={`${data.name}さんのキャリア詳細`}
     >
       <div className="flex items-start gap-4 border-b border-border p-5 md:p-6">
-        <img
-          src={data.photo || '/placeholder-user.jpg'}
-          alt={`${data.name}さんの顔写真`}
-          className="size-20 shrink-0 rounded-2xl border border-border object-cover"
-          crossOrigin="anonymous"
-        />
+        {data.photo ? (
+          <img
+            src={data.photo}
+            alt={`${data.name}さんの顔写真`}
+            className="size-20 shrink-0 rounded-2xl border border-border object-cover"
+            crossOrigin="anonymous"
+          />
+        ) : (
+          <CaseAvatar
+            avatar={data.avatar}
+            label={`${data.name}さんのイラスト`}
+            className="size-20 shrink-0 rounded-2xl border border-border object-cover"
+          />
+        )}
         <div className="min-w-0 flex-1">
           <span className="inline-flex items-center gap-1 rounded-full bg-accent px-2 py-0.5 text-[11px] font-medium text-accent-foreground">
             {category ? <CategoryIcon name={category.icon} className="size-3" /> : null}
