@@ -6,7 +6,6 @@ import {
   cases,
   getCasesByCategory,
   getCategory,
-  type CareerCase,
   type CategoryId,
 } from '@/lib/career-data'
 import { applyFilters, defaultFilters, type CaseFilters } from '@/lib/filters'
@@ -15,7 +14,6 @@ import { CategoryGrid } from '@/components/category-grid'
 import { CareerTree } from '@/components/career-tree'
 import { FilterBar } from '@/components/filter-bar'
 import { CaseList } from '@/components/case-list'
-import { CaseDetailDialog } from '@/components/case-detail-dialog'
 import { CategoryIcon } from '@/components/category-icon'
 
 export default function Page() {
@@ -23,7 +21,6 @@ export default function Page() {
   const [selectedCategory, setSelectedCategory] = useState<CategoryId | null>(null)
   const [selectedLeaf, setSelectedLeaf] = useState<string | null>(null)
   const [filters, setFilters] = useState<CaseFilters>(defaultFilters)
-  const [activeCase, setActiveCase] = useState<CareerCase | null>(null)
 
   const category = selectedCategory ? getCategory(selectedCategory) : null
 
@@ -108,18 +105,16 @@ export default function Page() {
               onChange={handleFilterChange}
               onReset={() => setFilters(defaultFilters)}
             />
-            <CaseList items={filteredCases} onOpen={setActiveCase} onReset={resetAll} />
+            <CaseList items={filteredCases} onReset={resetAll} />
           </div>
         </div>
       </div>
 
       <footer className="border-t border-border py-8">
         <p className="text-center text-xs text-muted-foreground">
-          ナースキャリアマップ — 掲載されている人物・事例はすべてサンプルです。
+          ナースキャリアマップ
         </p>
       </footer>
-
-      <CaseDetailDialog data={activeCase} onClose={() => setActiveCase(null)} />
     </main>
   )
 }

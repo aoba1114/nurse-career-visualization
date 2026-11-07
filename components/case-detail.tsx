@@ -1,6 +1,3 @@
-'use client'
-
-import { useEffect } from 'react'
 import {
   Award,
   Briefcase,
@@ -10,7 +7,6 @@ import {
   Sparkles,
   TrendingUp,
   Wallet,
-  X,
 } from 'lucide-react'
 import type { CareerCase } from '@/lib/career-data'
 import { getCategory } from '@/lib/career-data'
@@ -40,78 +36,41 @@ function SectionTitle({
   )
 }
 
-export function CaseDetailDialog({
-  data,
-  onClose,
-}: {
-  data: CareerCase | null
-  onClose: () => void
-}) {
-  useEffect(() => {
-    if (!data) return
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose()
-    }
-    document.addEventListener('keydown', onKey)
-    document.body.style.overflow = 'hidden'
-    return () => {
-      document.removeEventListener('keydown', onKey)
-      document.body.style.overflow = ''
-    }
-  }, [data, onClose])
-
-  if (!data) return null
+export function CaseDetail({ data }: { data: CareerCase }) {
   const category = getCategory(data.category)
 
   return (
-    <div
-      className="fixed inset-0 z-50 flex items-end justify-center bg-foreground/40 p-0 backdrop-blur-sm animate-in fade-in duration-200 sm:items-center sm:p-6"
-      onClick={onClose}
-      role="dialog"
-      aria-modal="true"
+    <section
+      className="overflow-hidden rounded-3xl border border-border bg-card shadow-sm"
       aria-label={`${data.name}さんのキャリア詳細`}
     >
-      <div
-        className="flex max-h-[92vh] w-full max-w-2xl flex-col overflow-hidden rounded-t-3xl border border-border bg-card shadow-xl animate-in slide-in-from-bottom-4 duration-300 sm:rounded-3xl"
-        onClick={(e) => e.stopPropagation()}
-      >
-        {/* Header */}
-        <div className="relative flex items-start gap-4 border-b border-border p-5 md:p-6">
-          <img
-            src={data.photo || '/placeholder.svg'}
-            alt={`${data.name}さんの顔写真`}
-            className="size-20 shrink-0 rounded-2xl border border-border object-cover"
-            crossOrigin="anonymous"
-          />
-          <div className="min-w-0 flex-1 pr-8">
-            <span className="inline-flex items-center gap-1 rounded-full bg-accent px-2 py-0.5 text-[11px] font-medium text-accent-foreground">
-              {category ? <CategoryIcon name={category.icon} className="size-3" /> : null}
-              {category?.label}
+      <div className="flex items-start gap-4 border-b border-border p-5 md:p-6">
+        <img
+          src={data.photo || '/placeholder-user.jpg'}
+          alt={`${data.name}さんの顔写真`}
+          className="size-20 shrink-0 rounded-2xl border border-border object-cover"
+          crossOrigin="anonymous"
+        />
+        <div className="min-w-0 flex-1">
+          <span className="inline-flex items-center gap-1 rounded-full bg-accent px-2 py-0.5 text-[11px] font-medium text-accent-foreground">
+            {category ? <CategoryIcon name={category.icon} className="size-3" /> : null}
+            {category?.label}
+          </span>
+          <h1 className="mt-1.5 text-lg font-semibold text-foreground">
+            {data.name}
+            <span className="ml-2 text-sm font-normal text-muted-foreground">
+              {data.age}歳{data.gender && `・${data.gender}`}・看護師歴{data.yearsAsNurse}年
             </span>
-            <h3 className="mt-1.5 text-lg font-semibold text-foreground">
-              {data.name}
-              <span className="ml-2 text-sm font-normal text-muted-foreground">
-                {data.age}歳・看護師歴{data.yearsAsNurse}年
-              </span>
-            </h3>
-            <p className="mt-0.5 text-sm font-medium text-primary">{data.currentRole}</p>
-            <p className="flex items-center gap-1 text-xs text-muted-foreground">
-              <Building2 className="size-3.5" />
-              {data.currentCompany}
-            </p>
-          </div>
-          <button
-            type="button"
-            onClick={onClose}
-            className="absolute right-4 top-4 rounded-full p-1.5 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
-            aria-label="閉じる"
-          >
-            <X className="size-5" />
-          </button>
+          </h1>
+          <p className="mt-0.5 text-sm font-medium text-primary">{data.currentRole}</p>
+          <p className="flex items-center gap-1 text-xs text-muted-foreground">
+            <Building2 className="size-3.5" />
+            {data.currentCompany}
+          </p>
         </div>
+      </div>
 
-        {/* Scrollable body */}
-        <div className="flex-1 space-y-7 overflow-y-auto p-5 md:p-6">
+      <div className="space-y-7 p-5 md:p-6">
           {/* Quick stats */}
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
             <div className="rounded-xl border border-border bg-secondary/50 p-3">
@@ -119,7 +78,9 @@ export function CaseDetailDialog({
                 <Wallet className="size-3.5" />
                 年収
               </p>
-              <p className="mt-1 text-lg font-semibold text-foreground">{data.salary}万円</p>
+              <p className="mt-1 text-lg font-semibold text-foreground">
+                {data.salaryDisplay ?? `${data.salary}万円`}
+              </p>
             </div>
             <div className="rounded-xl border border-border bg-secondary/50 p-3">
               <p className="flex items-center gap-1 text-xs text-muted-foreground">
@@ -135,10 +96,38 @@ export function CaseDetailDialog({
               </p>
               <p className="mt-1 text-sm font-semibold text-foreground">{data.workStyle}</p>
             </div>
+            <div className="rounded-xl border border-border bg-secondary/50 p-3">
+              <p className="flex items-center gap-1 text-xs text-muted-foreground">
+                <Clock className="size-3.5" />
+                夜勤
+              </p>
+              <p className="mt-1 text-sm font-semibold text-foreground">
+                {data.nightShift ? 'あり' : 'なし'}
+              </p>
+            </div>
+            {data.monthlyOvertime && (
+              <div className="rounded-xl border border-border bg-secondary/50 p-3">
+                <p className="flex items-center gap-1 text-xs text-muted-foreground">
+                  <Clock className="size-3.5" />
+                  月平均残業時間
+                </p>
+                <p className="mt-1 text-sm font-semibold text-foreground">
+                  {data.monthlyOvertime}
+                </p>
+              </div>
+            )}
+            <div className="rounded-xl border border-border bg-secondary/50 p-3">
+              <p className="flex items-center gap-1 text-xs text-muted-foreground">
+                リモート勤務
+              </p>
+              <p className="mt-1 text-sm font-semibold text-foreground">
+                {data.remote ? 'あり' : 'なし'}
+              </p>
+            </div>
           </div>
 
           {/* Timeline */}
-          <div>
+          {data.timeline.length > 0 && <div>
             <SectionTitle icon={Clock}>キャリアのタイムライン</SectionTitle>
             <ol className="relative ml-2 border-l-2 border-border">
               {data.timeline.map((step, i) => (
@@ -170,18 +159,32 @@ export function CaseDetailDialog({
                 </li>
               ))}
             </ol>
-          </div>
+          </div>}
 
           {/* Transfer reason */}
-          <div>
+          {data.transferReason && <div>
             <SectionTitle icon={Sparkles}>この道を選んだ理由</SectionTitle>
             <p className="rounded-xl bg-accent/60 p-3.5 text-sm leading-relaxed text-foreground">
               {data.transferReason}
             </p>
-          </div>
+          </div>}
+
+          {data.careerPreparation && <div>
+            <SectionTitle icon={Sparkles}>現在の仕事に就くまでにかかった年数や取り組んだこと</SectionTitle>
+            <p className="rounded-xl bg-accent/60 p-3.5 text-sm leading-relaxed text-foreground">
+              {data.careerPreparation}
+            </p>
+          </div>}
+
+          {data.futureCareerPlan && <div>
+            <SectionTitle icon={TrendingUp}>今後のキャリアプラン</SectionTitle>
+            <p className="rounded-xl bg-accent/60 p-3.5 text-sm leading-relaxed text-foreground">
+              {data.futureCareerPlan}
+            </p>
+          </div>}
 
           {/* Daily work */}
-          <div>
+          {data.dailyWork && data.dailyWork.length > 0 && <div>
             <SectionTitle icon={Clock}>一日の仕事内容</SectionTitle>
             <ul className="space-y-1.5">
               {data.dailyWork.map((w, i) => (
@@ -194,35 +197,42 @@ export function CaseDetailDialog({
                 </li>
               ))}
             </ul>
-          </div>
+          </div>}
 
           {/* Qualifications & skills */}
+          {(data.qualifications.length > 0 || (data.skills?.length ?? 0) > 0) && (
           <div className="grid gap-6 sm:grid-cols-2">
-            <div>
+            {data.qualifications.length > 0 && <div>
               <SectionTitle icon={Award}>必要な資格</SectionTitle>
               <div className="flex flex-wrap gap-1.5">
                 {data.qualifications.map((q) => (
                   <Tag key={q}>{q}</Tag>
                 ))}
               </div>
-            </div>
-            <div>
+            </div>}
+            {(data.skills?.length ?? 0) > 0 && <div>
               <SectionTitle icon={TrendingUp}>必要なスキル</SectionTitle>
               <div className="flex flex-wrap gap-1.5">
-                {data.skills.map((s) => (
+                {data.skills?.map((s) => (
                   <Tag key={s}>{s}</Tag>
                 ))}
               </div>
-            </div>
+            </div>}
           </div>
+          )}
 
           {/* Ratings */}
-          <div className="grid gap-5 rounded-xl border border-border p-4 sm:grid-cols-2">
-            <RatingMeter label="転職難易度" value={data.difficulty} tone="muted" />
-            <RatingMeter label="おすすめ度" value={data.recommendation} tone="primary" />
-          </div>
-        </div>
+          {(data.difficulty !== undefined || data.recommendation !== undefined) && (
+            <div className="grid gap-5 rounded-xl border border-border p-4 sm:grid-cols-2">
+              {data.difficulty !== undefined && (
+                <RatingMeter label="転職難易度" value={data.difficulty} tone="muted" />
+              )}
+              {data.recommendation !== undefined && (
+                <RatingMeter label="おすすめ度" value={data.recommendation} tone="primary" />
+              )}
+            </div>
+          )}
       </div>
-    </div>
+    </section>
   )
 }

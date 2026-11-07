@@ -1,16 +1,14 @@
 'use client'
 
 import { SearchX } from 'lucide-react'
-import type { CareerCase } from '@/lib/career-data'
+import { cases, type CareerCase } from '@/lib/career-data'
 import { CaseCard } from './case-card'
 
 export function CaseList({
   items,
-  onOpen,
   onReset,
 }: {
   items: CareerCase[]
-  onOpen: (data: CareerCase) => void
   onReset: () => void
 }) {
   return (
@@ -35,7 +33,7 @@ export function CaseList({
       {items.length > 0 ? (
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
           {items.map((c) => (
-            <CaseCard key={c.id} data={c} onOpen={onOpen} />
+            <CaseCard key={c.id} data={c} />
           ))}
         </div>
       ) : (
@@ -43,19 +41,25 @@ export function CaseList({
           <span className="flex size-12 items-center justify-center rounded-full bg-secondary">
             <SearchX className="size-6 text-muted-foreground" />
           </span>
-          <p className="text-sm font-medium text-foreground">
-            条件に合う事例が見つかりませんでした
-          </p>
-          <p className="max-w-xs text-xs text-muted-foreground">
-            検索キーワードやフィルターの条件を変更してみてください。
-          </p>
-          <button
-            type="button"
-            onClick={onReset}
-            className="mt-1 rounded-lg bg-primary px-4 py-2 text-xs font-medium text-primary-foreground transition-colors hover:bg-primary/90"
-          >
-            条件をすべてリセット
-          </button>
+          {cases.length === 0 ? (
+            <p className="text-sm font-medium text-foreground">事例を準備中です</p>
+          ) : (
+            <>
+              <p className="text-sm font-medium text-foreground">
+                条件に合う事例が見つかりませんでした
+              </p>
+              <p className="max-w-xs text-xs text-muted-foreground">
+                検索キーワードやフィルターの条件を変更してみてください。
+              </p>
+              <button
+                type="button"
+                onClick={onReset}
+                className="mt-1 rounded-lg bg-primary px-4 py-2 text-xs font-medium text-primary-foreground transition-colors hover:bg-primary/90"
+              >
+                条件をすべてリセット
+              </button>
+            </>
+          )}
         </div>
       )}
     </section>

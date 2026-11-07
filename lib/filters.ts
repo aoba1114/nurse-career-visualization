@@ -93,7 +93,7 @@ export const filterGroups: FilterGroup[] = [
     label: '資格',
     options: [
       { value: 'all', label: 'すべて' },
-      ...uniq(cases.flatMap((c) => c.qualifications)).map((q) => ({ value: q, label: q })),
+      ...uniq(cases.flatMap((c) => c.qualifications ?? [])).map((q) => ({ value: q, label: q })),
     ],
   },
 ]
@@ -134,9 +134,9 @@ export function applyFilters(
         c.summary,
         c.region,
         ...c.path,
-        ...c.tags,
+        ...(c.tags ?? []),
         ...c.qualifications,
-        ...c.skills,
+        ...(c.skills ?? []),
       ]
         .join(' ')
         .toLowerCase()
