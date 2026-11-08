@@ -1,8 +1,7 @@
 'use client'
 
 import { Search, Sparkles, X } from 'lucide-react'
-
-const suggestions = ['EY', '製薬会社', '助産師', 'ICU', '海外', '保健師']
+import { getRecommendedKeywords } from '@/lib/career-data'
 
 export function SiteHeader({
   query,
@@ -11,12 +10,17 @@ export function SiteHeader({
   query: string
   onQueryChange: (value: string) => void
 }) {
+  const suggestions = getRecommendedKeywords()
+  const placeholder = suggestions.length
+    ? `職種・企業名で検索（例：${suggestions.slice(0, 3).join('、')}）`
+    : '職種・企業名で検索'
+
   return (
     <header className="border-b border-border bg-card/70 backdrop-blur-md">
       <div className="mx-auto flex max-w-6xl flex-col items-center gap-6 px-5 py-14 text-center md:py-20">
         <span className="inline-flex items-center gap-1.5 rounded-full border border-border bg-secondary px-3 py-1 text-xs font-medium text-muted-foreground">
           <Sparkles className="size-3.5 text-primary" />
-          看護師のキャリアを可視化する
+          ナースキャンバス — 看護師のキャリアを可視化する
         </span>
 
         <h1 className="text-balance text-3xl font-semibold tracking-tight text-foreground md:text-5xl">
@@ -35,7 +39,7 @@ export function SiteHeader({
             <input
               value={query}
               onChange={(e) => onQueryChange(e.target.value)}
-              placeholder="職種・企業名で検索（例：ICU、EY、製薬）"
+              placeholder={placeholder}
               className="w-full bg-transparent text-sm text-foreground outline-none placeholder:text-muted-foreground"
               aria-label="キャリアを検索"
             />
@@ -51,18 +55,20 @@ export function SiteHeader({
             )}
           </div>
 
-          <div className="mt-3 flex flex-wrap items-center justify-center gap-2">
-            {suggestions.map((s) => (
-              <button
-                key={s}
-                type="button"
-                onClick={() => onQueryChange(s)}
-                className="rounded-full border border-border bg-card px-3 py-1 text-xs text-muted-foreground transition-colors hover:border-primary/40 hover:bg-accent hover:text-accent-foreground"
-              >
-                {s}
-              </button>
-            ))}
-          </div>
+          {suggestions.length > 0 && (
+            <div className="mt-3 flex flex-wrap items-center justify-center gap-2">
+              {suggestions.map((s) => (
+                <button
+                  key={s}
+                  type="button"
+                  onClick={() => onQueryChange(s)}
+                  className="rounded-full border border-border bg-card px-3 py-1 text-xs text-muted-foreground transition-colors hover:border-primary/40 hover:bg-accent hover:text-accent-foreground"
+                >
+                  {s}
+                </button>
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </header>

@@ -69,7 +69,7 @@ export function CaseCard({ data }: { data: CareerCase }) {
 
       <div className="flex items-center justify-between border-t border-border px-5 py-3">
         <span className="text-xs text-muted-foreground">
-          想定年収{' '}
+          年収{' '}
           <span className="font-semibold text-foreground">
             {data.salaryDisplay ?? `${data.salary}万円`}
           </span>

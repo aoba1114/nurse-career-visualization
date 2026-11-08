@@ -326,6 +326,30 @@ export function getCasesByCategory(id: CategoryId) {
   return cases.filter((c) => c.category === id)
 }
 
+export function getRecommendedKeywords(limit = 6): string[] {
+  const seen = new Set<string>()
+  const keywords: string[] = []
+
+  for (const careerCase of cases) {
+    for (const keyword of [
+      careerCase.currentRole,
+      careerCase.currentCompany,
+      ...(careerCase.tags ?? []),
+    ]) {
+      const normalized = keyword.trim()
+      const key = normalized.toLocaleLowerCase()
+
+      if (normalized && !seen.has(key)) {
+        seen.add(key)
+        keywords.push(normalized)
+        if (keywords.length === limit) return keywords
+      }
+    }
+  }
+
+  return keywords
+}
+
 /** ツリーを平坦化してラベル一覧を得る（検索用） */
 export function flattenTree(nodes: TreeNode[]): string[] {
   return nodes.flatMap((n) => [n.label, ...(n.children ? flattenTree(n.children) : [])])

@@ -15,6 +15,7 @@ import { CareerTree } from '@/components/career-tree'
 import { FilterBar } from '@/components/filter-bar'
 import { CaseList } from '@/components/case-list'
 import { CategoryIcon } from '@/components/category-icon'
+import { SHOW_FILTERS } from '@/lib/config'
 
 export default function Page() {
   const [query, setQuery] = useState('')
@@ -100,11 +101,13 @@ export default function Page() {
 
           {/* 右カラム：フィルター＋事例 */}
           <div className="space-y-6">
-            <FilterBar
-              filters={filters}
-              onChange={handleFilterChange}
-              onReset={() => setFilters(defaultFilters)}
-            />
+            {SHOW_FILTERS && (
+              <FilterBar
+                filters={filters}
+                onChange={handleFilterChange}
+                onReset={() => setFilters(defaultFilters)}
+              />
+            )}
             <CaseList items={filteredCases} onReset={resetAll} />
           </div>
         </div>
@@ -112,7 +115,7 @@ export default function Page() {
 
       <footer className="border-t border-border py-8">
         <p className="text-center text-xs text-muted-foreground">
-          ナースキャリアマップ
+          ナースキャンバス
         </p>
       </footer>
     </main>
